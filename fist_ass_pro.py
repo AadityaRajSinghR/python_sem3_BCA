@@ -1,4 +1,4 @@
-def calculate_average(assignments, exams, projects):
+def calculate_average(  assignments, exams, projects):
 
     # Assignments: 40%, Exams: 50%, Projects: 10%
 
