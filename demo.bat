@@ -1,1 +1,1 @@
-python gpt.py
+python main.py
