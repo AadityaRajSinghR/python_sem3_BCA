@@ -1,0 +1,526 @@
+# # Student Grades Calculator App
+
+# # Import colorama for text color formatting
+# from colorama import Fore, Style, init
+# from tabulate import tabulate
+# init(autoreset=True)  # Automatically reset color to default after each print
+
+# criteriadic = {}
+# TOTAL_WEIGHTAGE = 100
+# TOTAL_cce_WEIGHTAGE = 100
+# weightage_list = {}
+
+# # Function to confirm user action
+# def confirm_action(op):
+#     return input(Fore.RED + f"Do you want to add {op}? Y/N : ").upper()
+
+
+# def criteria():
+#     condition = True
+#     global TOTAL_WEIGHTAGE  # Declare TOTAL_WEIGHTAGE as global
+    
+#     while condition:
+        
+#         # Exam Details
+#         print(Fore.CYAN + "\n--------| Enter Some Exam Details |--------\n")
+#         if confirm_action("Exam") == "Y":
+#             add_weightage("Exam")
+         
+#         # Jury Details
+#         print(Fore.CYAN + "\n--------| Enter Some Jury Details |--------\n")
+#         if confirm_action("Jury") == "Y":
+#             add_weightage("Jury")
+                
+#         # Continuous and Comprehensive Evaluation (CCE) Details
+#         print(Fore.CYAN + "\n--------| Enter Some Continuous and Comprehensive Evaluation (CCE) Details |--------\n")
+        
+#         handle_cce_details()
+        
+         
+        
+#         # Check if user wants to continue
+#         cont = input(Fore.YELLOW + "Do you want to continue? Y/N : ").upper()
+#         if cont == "N":
+#             print(Fore.MAGENTA + "Thank you for using the app!")
+#             condition = False
+#         elif cont != "Y":
+#             print(Fore.RED + "Please enter a valid option.")
+
+# def add_weightage(category):
+#     global TOTAL_WEIGHTAGE  # Declare TOTAL_WEIGHTAGE as global
+#     while True:
+#         print("\nTotal Remaining weightage: ", TOTAL_WEIGHTAGE, "%\n")
+#         try:
+#             weightage = float(input(f"How many {category} weightages do you want to add? : "))
+#             if weightage > TOTAL_WEIGHTAGE:
+#                 print(f"Total weightage of {category} cannot be greater than {TOTAL_WEIGHTAGE}%")
+#                 continue
+                
+#             TOTAL_WEIGHTAGE -= weightage
+#             marks = float(input(f"How many {category} marks do you want to add? : "))
+#             criteriadic[category] = {"weightage": weightage, "marks": marks}
+#             weightage_list[category] = weightage / 100
+#             break
+#         except ValueError:
+#             print("Please enter a valid number")
+
+# def handle_cce_details():
+#     global TOTAL_cce_WEIGHTAGE, TOTAL_WEIGHTAGE
+#     weightage = TOTAL_WEIGHTAGE
+#     if "CCE" not in criteriadic:
+#         criteriadic["CCE"] = {}
+        
+#     criteriadic["CCE"] = {"weightage": weightage}
+#     weightage_list["CCE"] = weightage / 100
+#     TOTAL_WEIGHTAGE = 0  # No weightage left for other categories after CCE
+    
+#     print(Fore.RED +"\nTotal Remaining CCE weightage: ", TOTAL_cce_WEIGHTAGE, "%\n")
+#     Style.RESET_ALL
+#     add_cce_activities()
+
+# def add_cce_activities():
+#     Style.RESET_ALL
+#     cce_activities = ["assignments", "projects", "quizzes", "value added courses", "practical tests", "attendance", "other activities"]
+#     for activity in cce_activities:
+#         if TOTAL_cce_WEIGHTAGE == 0:
+#             print("You have reached the maximum CCE weightage. No more activities can be added.")
+#             return
+#         else:
+#             if confirm_action( activity.capitalize()) == "Y":
+                
+#                 if activity == "attendance":
+#                     add_attendance()
+#                 else:
+#                     while True:
+#                         try:
+#                             num = int(input(Style.RESET_ALL + f"How many {activity} do you want to add? : "))
+#                             get_values(activity.capitalize(), num)
+#                             break
+#                         except ValueError:
+#                             print("Please enter a valid number")
+
+# def add_attendance():
+#     global TOTAL_cce_WEIGHTAGE
+#     while True:
+#         try:
+#             weightage = float(input("\tEnter Attendance Weightage: "))
+#             if weightage > TOTAL_cce_WEIGHTAGE:
+#                 print(Fore.RED + f"Attendance weightage cannot be greater than the remaining CCE weightage: {TOTAL_cce_WEIGHTAGE}%")
+#                 Style.RESET_ALL
+#                 continue
+#             criteriadic["CCE"]["Attendance"] = {"weightage": weightage, "marks": 100}
+#             TOTAL_cce_WEIGHTAGE -= weightage
+#             break
+#         except ValueError:
+#             print(Fore.RED +"Please enter a valid number" + Style.RESET_ALL)
+
+# def get_values(name, num):
+#     global TOTAL_cce_WEIGHTAGE
+#     # Ensure 'CCE' key exists
+#     if "CCE" not in criteriadic:
+#         criteriadic["CCE"] = {}
+    
+#     # Ensure the 'name' key exists within 'CCE'
+#     if name not in criteriadic["CCE"]:
+#         criteriadic["CCE"][name] = {}
+        
+#     for i in range(num):
+#         name_name = input(f"\tEnter name for {name} {i+1}: ")
+#         while True:
+#             try:
+#                 weightage = float(input("\tEnter Weightage: "))
+#                 if weightage > TOTAL_cce_WEIGHTAGE:
+#                     print(f"\n{name_name} weightage cannot be greater than {TOTAL_cce_WEIGHTAGE}%\n")
+#                     continue
+#                 TOTAL_cce_WEIGHTAGE -= weightage
+#                 marks = float(input("\tEnter Marks: "))
+#                 criteriadic["CCE"][name][name_name] = {"weightage": weightage, "marks": marks}
+#                 print("\nTotal Remaining CCE weightage: ", TOTAL_cce_WEIGHTAGE, "%\n")
+#                 break
+#             except ValueError:
+#                 print("Please enter a valid number")
+
+# criteria()
+
+# print(Fore.BLUE + f"\n\nCriteriadic: {criteriadic}\n\n")  
+
+
+
+# # Prepare data for tabulate dynamically
+# def display_criteria():
+#     """Display the criteria in a formatted table"""
+#     table = []
+#     for category, values in criteriadic.items():
+#         if isinstance(values, dict) and "weightage" in values:
+#             table.append([category, "", "", values["weightage"], values.get("marks", "")])
+#         else:
+#             for sub_category, sub_values in values.items():
+#                 for detail, detail_values in sub_values.items():
+#                     table.append(["CCE", sub_category, detail, detail_values["weightage"], detail_values["marks"]])
+
+#     print(tabulate(table, headers=["Category", "Subcategory", "Details", "Weightage", "Marks"], tablefmt="grid"))
+
+# display_criteria()
+
+
+
+# print(Fore.GREEN + f"Weightage list: {weightage_list}")
+
+
+
+
+
+# """ Program -
+#         Exam- 
+#             -> WEIGHTAGE
+#             -> MARKS
+#         Jury-
+#             -> WEIGHTAGE
+#             -> MARKS
+#         CCE-
+#             Assignments-
+#                 -> WEIGHTAGE
+#                 -> MARKS
+#             Projects-
+#                 -> WEIGHTAGE
+#                 -> MARKS
+#             Quizzes-
+#                 -> WEIGHTAGE
+#                 -> MARKS
+#             Value Added Courses-
+#                 -> WEIGHTAGE
+#                 -> MARKS
+#             Practical Tests-
+#                 -> WEIGHTAGE
+#                 -> MARKS
+#             Attendance-
+#                 -> WEIGHTAGE
+#                 -> MARKS
+#             Other Activities-
+#                 -> WEIGHTAGE
+#                 -> MARKS
+# ===========================================
+
+# Exam -
+#     weightage: 25%
+#     Marks: 100
+# Jury- 
+#     weightage: 25%
+#     Marks: 100
+# CCE-
+#     weightage: 50%
+#     CCE_WEIGHTAGE = 100
+#     Marks:
+#         Assignments:
+#             Assignment1: 
+#                 weightage: 20%
+#                 marks: 50
+#             Assignment2: 
+#                 weightage: 10%
+#                 marks: 50
+#         Projects:
+#             Project1: 
+#                 weightage: 30%
+#                 marks: 60
+#         Quizzes: 
+#                 Quiz1: 
+#                     weightage: 10%
+#                     marks: 50
+#                 Quiz2: 
+#                     weightage: 20%
+#                     marks: 50
+#         Value Added Courses: I dont conduct any value added courses
+#         Practical Tests: I dont conduct any practical tests
+#         Attendance: 
+#             weightage: 10%
+#             marks: 100
+#         Other Activities: i dont add any other activities at the moment
+# """
+
+
+
+
+
+
+
+
+# Student Grades Calculator App
+
+from colorama import Fore, Style, init
+from tabulate import tabulate
+
+init(autoreset=True)  # Automatically reset color to default after each print
+
+# Initialize global variables
+criteriadic = {}
+TOTAL_WEIGHTAGE = 100
+TOTAL_cce_WEIGHTAGE = 100
+TOTAL_cce=0
+weightage_list = {}
+
+#-------------------------------------------------#
+#---------| Add Criteria Function Start |---------#
+#-------------------------------------------------#
+
+# Function to confirm user action
+def confirm_action(op):
+    """Confirm user action."""
+    return input(Fore.MAGENTA + f"Do you want to add {op}? Y/N : " + Style.RESET_ALL).upper()
+
+# Function to add weightage to criteria It is main function of add criteria
+def add_criteria():
+    """Main function to handle user inputs for criteria and weightage."""
+    global TOTAL_WEIGHTAGE ,TOTAL_cce_WEIGHTAGE ,TOTAL_WEIGHTAGE, criteriadic
+    cont = ""
+    while True:
+        # Exam Details
+        print(Fore.CYAN + "\n--------| Enter Some Exam Details |--------\n")
+        if confirm_action("Exam") == "Y":
+            add_weightage("Exam")
+         
+        # Jury Details
+        print(Fore.CYAN + "\n--------| Enter Some Jury Details |--------\n")
+        if confirm_action("Jury") == "Y":
+            add_weightage("Jury")
+                
+        # Continuous and Comprehensive Evaluation (CCE) Details
+        print(Fore.CYAN + "\n--------| Enter Some Continuous and Comprehensive Evaluation (CCE) Details |--------\n")
+        handle_cce_details()
+        
+        display_criteria()
+        cont = input(Fore.YELLOW + "Do you want to Update Criteria's? Y/N : ").upper()
+        if cont == "N":
+            print(Fore.MAGENTA + "Thank you for using the app!")
+            break
+        elif cont == "Y":
+            criteriadic = {}
+            TOTAL_WEIGHTAGE = 100
+            TOTAL_cce_WEIGHTAGE = 100
+        elif cont != "Y" or cont != "N":
+            print(Fore.RED + "Please enter a valid option.")
+
+# Function to add weightage and marks for a specific category
+def add_weightage(category):
+    """Add weightage and marks for a specific category."""
+    global TOTAL_WEIGHTAGE
+    
+    
+    while True:
+        print("\nTotal Remaining weightage: ", TOTAL_WEIGHTAGE, "%\n")
+        try:
+            
+                
+            weightage = float(input(f"How many {category} weightages do you want to add? : "))
+            if weightage < 0:
+                print(f"Total weightage of {category} cannot be less than 0%")
+                continue
+            
+            if weightage > TOTAL_WEIGHTAGE:
+                print(f"Total weightage of {category} cannot be greater than {TOTAL_WEIGHTAGE}%")
+                continue
+                
+            TOTAL_WEIGHTAGE -= weightage
+            marks = float(input(f"How many {category} marks do you want to add? : "))
+            criteriadic[category] = {"weightage": weightage, "marks": marks}
+            weightage_list[category] = weightage / 100
+            break
+        except ValueError:
+            print("Please enter a valid number")
+
+#Handle CCE details and activities.
+def handle_cce_details():
+    global TOTAL_cce_WEIGHTAGE, TOTAL_WEIGHTAGE
+    
+    weightage = TOTAL_WEIGHTAGE
+    if "CCE" not in criteriadic:
+        criteriadic["CCE"] = {}
+        
+    criteriadic["CCE"]["weightage"] = weightage
+    weightage_list["CCE"] = weightage / 100
+    TOTAL_WEIGHTAGE = 0  # No weightage left for other categories after CCE
+    
+    print(Fore.RED +"\nTotal Remaining CCE weightage: ", TOTAL_cce_WEIGHTAGE, "%\n")
+    add_cce_activities()
+    #
+    if TOTAL_cce_WEIGHTAGE != 0:
+        print(Fore.RED + Style.BRIGHT + "\n\nPlease adjust the criteria to ensure the CCE weightage totals 100%.\n")
+        TOTAL_cce_WEIGHTAGE = 100
+        handle_cce_details()  # Restart the CCE entry process
+
+#Add CCE activities and their weightage.
+def add_cce_activities():
+    # add all CCE activity in Array
+    cce_activities = ["assignments", "projects", "quizzes", "value added courses", "practical tests", "attendance", "other activities"]
+    
+    for activity in cce_activities:
+        if TOTAL_cce_WEIGHTAGE == 0:
+            print("You have reached the maximum CCE weightage. No more activities can be added.")
+            return
+        
+        if confirm_action(activity.capitalize()) == "Y":
+            if activity == "attendance":
+                add_attendance()
+            else:
+                while True:
+                    try:
+                        num = int(input(f"How many {activity} do you want to add? : "))
+                        get_values(activity.capitalize(), num)
+                        break
+                    except ValueError:
+                        print("Please enter a valid number")
+
+
+#Add attendance weightage and marks.
+def add_attendance():
+    global TOTAL_cce_WEIGHTAGE
+    if "Attendance" not in criteriadic["CCE"]:
+        criteriadic["CCE"]["Attendance"] = {}
+    while True:
+        try:
+            weightage = float(input("\tEnter Attendance Weightage: "))
+            if weightage > TOTAL_cce_WEIGHTAGE:
+                print(Fore.RED + f"Attendance weightage cannot be greater than the remaining CCE weightage: {TOTAL_cce_WEIGHTAGE}%")
+                continue
+            if weightage < 0:
+                print(Fore.RED + "Attendance weightage cannot be negative.")
+            criteriadic["CCE"]["Attendance"]["Attendance1"] = {"weightage": weightage, "marks": 100}
+            TOTAL_cce_WEIGHTAGE -= weightage
+            break
+        except ValueError:
+            print(Fore.RED +"Please enter a valid number" + Style.RESET_ALL)
+
+#Get values for each activity.
+def get_values(name, num):
+    
+    global TOTAL_cce_WEIGHTAGE , TOTAL_cce # Get Global Variables for edit
+    
+    # Check Ensure 'CCE' key exists
+    if "CCE" not in criteriadic:
+        criteriadic["CCE"] = {}
+    
+    # Ensure the 'name' key exists within 'CCE'
+    if name not in criteriadic["CCE"]:
+        criteriadic["CCE"][name] = {}
+        
+    for i in range(num):
+        
+        name_name = input(Style.RESET_ALL + f"\tEnter name for {name} {i+1}: ")
+        while True:
+            try:
+                    
+                weightage = float(input("\tEnter Weightage: "))
+                TOTAL_cce += weightage
+                if weightage > TOTAL_cce_WEIGHTAGE:
+                    print(f"\n{name_name} weightage cannot be greater than {TOTAL_cce_WEIGHTAGE}%\n")
+                    continue
+                elif weightage<0:
+                    print(f"\n{name_name} weightage cannot be less than 0%\n")
+                    continue
+                    
+                
+                TOTAL_cce_WEIGHTAGE -= weightage
+                marks = float(input("\tEnter Marks: "))
+                if marks < 0:
+                    print(f"\n{name_name} marks cannot be less than 0%\n")
+                    continue
+                
+                # If all inputs are valid, update global values
+                criteriadic["CCE"][name][name_name] = {"weightage": weightage, "marks": marks}
+                print(Fore.RED + "\nTotal Remaining CCE weightage: ", TOTAL_cce_WEIGHTAGE, "%\n" + Style.RESET_ALL)
+                break
+                
+            except ValueError:
+                print("Please enter a valid number")
+
+
+#Display the criteria in a formatted table
+def display_criteria():
+    table = []
+
+    # Iterate through the main categories in the criteriadic
+    for category, values in criteriadic.items():
+        if category in ["Exam", "Jury"]:
+            # Directly add Exam and Jury data
+            table.append([category, "", "", values["weightage"], values["marks"]])
+            
+        elif category == "CCE":
+            # Handle CCE and its sub-components dynamically
+            table.append([category, "", "", values["weightage"], ""])
+            
+            for sub_category, sub_values in values.items():
+                # isinstance is used to check if the object is a dictionary 
+                # It is Prebuild Function
+                if isinstance(sub_values, dict): 
+                    
+                    # Iterate through subcategories within CCE
+                    for detail, detail_values in sub_values.items():
+                        if isinstance(detail_values, dict):
+                            # Add details (like assignments, projects, etc.)
+                            table.append(["", sub_category, detail, detail_values["weightage"], detail_values["marks"]])
+
+    # Print the table using tabulate
+    headers = [Fore.GREEN + header + Style.RESET_ALL for header in ["Category", "Subcategory", "Details", "Weightage", "Marks"]]
+    
+    # Print the formatted table with colored headers
+    print(tabulate(table, headers=headers, tablefmt="grid"))
+
+
+
+# print(Fore.GREEN + f"Weightage list: {weightage_list}")
+
+
+#-------------------------------------------------#
+#----------| Add Criteria Function End |----------#
+#-------------------------------------------------#
+
+
+
+#-------------------------------------------------#
+#-----| Assign values to students fun Start |-----#
+#-------------------------------------------------#
+
+
+def Student_evaluation():
+    
+    st_Name = input(Fore.GREEN + "Enter Student Name: " + Style.RESET_ALL)
+    st_Env_No= input(Fore.GREEN + "Enter Environment Number: " + Style.RESET_ALL)
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+#-------------------------------------------------#
+#------| Assign values to students fun end |------#
+#-------------------------------------------------#
+
+# Main function to run the program
+def main():
+    while True:
+        try:
+            option = int(input(Fore.GREEN + "\n1. Add Criteria\n2. Display Criteria\n3. Exit\n" + Style.RESET_ALL))
+            if option == 1:
+                add_criteria()
+            elif option == 2:
+                Student_evaluation()
+            elif option == 3:
+                print(Fore.GREEN + "Thank you for using the app!" + Style.RESET_ALL)
+                break   
+            else:
+                print(Fore.RED + "Please enter a valid option." + Style.RESET_ALL)
+        except ValueError:
+            print(Fore.RED + "Please enter a valid Number" + Style.RESET_ALL)
+            
+
+# Call the main function to start the program
+main()
