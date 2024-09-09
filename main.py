@@ -158,7 +158,14 @@ def get_values(name, num):
         
     for i in range(num):
         
-        name_name = input(Style.RESET_ALL + f"\tEnter name for {name} {i+1}: ")
+        # Get {name} details
+        while True:  # Keep asking until a valid name is provided
+            name_name = input(Style.RESET_ALL + f"\tEnter name for {name} {i+1}: ")
+            if name_name == "":
+                print(Fore.RED + "\nName cannot be empty." + Style.RESET_ALL)
+            else:
+                break  # Exit the loop when a valid name is entered
+        
         while True:
             try:
                     
@@ -240,14 +247,14 @@ def Student_evaluation():
         return
     
     
-    st_Name = input(Fore.GREEN + "Enter Student Name: " + Style.RESET_ALL)
-    st_Env_No = input(Fore.GREEN + "Enter Environment Number: " + Style.RESET_ALL)
+    st_Name = input(Fore.GREEN + "Enter Student Name: " + Style.RESET_ALL).upper()
+    st_Env_No = input(Fore.GREEN + "Enter Enrollment Number: " + Style.RESET_ALL).upper()
     
     table = []
     total_score = 0
     total_weighted_score = 0
 
-    print(Fore.BLUE + Style.BRIGHT + f"\nStudent Name: {st_Name}\nEnvironment Number: {st_Env_No}" + Style.RESET_ALL)
+    
     # Iterate through the main categories in the criteriadic
     for category, values in criteriadic.items():
         if category in ["Exam", "Jury"]:
@@ -292,7 +299,7 @@ def Student_evaluation():
                                     cce_max_marks += detail_values["weightage"]  # Sum up the total weightage for CCE
 
                                     # Add details (like assignments, projects, etc.) to the table
-                                    table.append(["", sub_category, detail, detail_values["weightage"], detail_values["marks"], student_score, weighted_score])
+                                    table.append(["", sub_category, detail, detail_values["weightage"], detail_values["marks"], student_score])
                                     break  # Exit the loop after a valid input
                                 except ValueError:
                                     print("Please enter a valid number.")
@@ -303,10 +310,14 @@ def Student_evaluation():
             total_weighted_score += values["weightage"]
 
             # Add the CCE summary row to the table
-            table.append([category, "", "Total CCE", values["weightage"], "100", cce_total_score, cce_final_score])
+            table.append([category, "", "Total CCE", values["weightage"], "100", cce_total_score, cce_final_score,weighted_score])
+
+
+    # Print student name and enrollment number
+    print(Fore.BLUE + Style.BRIGHT + f"\nStudent Name: {st_Name}\nEnrollment Number: {st_Env_No}" + Style.RESET_ALL)
 
     # Print the table using tabulate
-    headers = [Fore.GREEN + header + Style.RESET_ALL for header in ["Category", "Subcategory", "Details", "Weightage", "Max Marks", "Student Score"]]
+    headers = [Fore.GREEN + header + Style.RESET_ALL for header in ["Category", "Subcategory", "Details", "Weightage", "Max Marks", "Student Score", "Weighted Score"]]
     print(tabulate(table, headers=headers, tablefmt="grid"))
 
     # Call final grade function
@@ -342,7 +353,7 @@ def final_grade(total_score,st_Name):
 def main():
     while True:
         try:
-            option = int(input(Fore.GREEN + "\n1. Add Criteria\n2. Assign Criteria to Students\n3. Exit\n" + Style.RESET_ALL))
+            option = int(input(Fore.GREEN + "\n1. Add Criteria\n2. Assign Criteria to Students\n3. Exit\n"+ Fore.RED + "Enter your choice: " + Style.RESET_ALL))
             if option == 1:
                 add_criteria()
             elif option == 2:
